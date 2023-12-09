@@ -1,3 +1,4 @@
+//UDP OpCodes
 final char UDPRequestActive = 0x00; 
 final char UDPSendActive    = 0x01;
 
