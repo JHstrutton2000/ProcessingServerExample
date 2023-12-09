@@ -9,16 +9,15 @@ boolean networked;
 
 ArrayList<String> servers;
 
-void setup() {
 
-  size(800, 800);
+void setup() {
   servers = new ArrayList<String>();
-  
+  //thread("thing");  
   try {
     InetAddress localhost = InetAddress.getLocalHost();
     ipAddress = localhost.getHostAddress();
     
-    udp = new UDP( this, UDPport );
+    udp = new UDP( this, UDPport, "224.0.0.2");
     udp.listen( true );
     networked = true;
   }
@@ -28,30 +27,21 @@ void setup() {
   }
 }
 
-void draw() {
-  delay(1000);
-  if(networked) {
-    udp.send(""+UDPRequestActive, ipAddress, UDPport);
+
+void thing(){
+  while(true){
+    delay(1000);
+    if(networked) {
+      udp.send(""+UDPActive+UDPRequest, ipAddress, UDPport);
+    }
   }
 }
 
+void draw() {
+  
+}
+
 void receive( byte[] data, String ip, int port ) {  // <-- extended handler
-  switch (data[0]){
-    case UDPRequestActive:
-      udp.send(""+UDPSendActive, ipAddress, UDPport);
-      break;
-    case UDPSendActive:
-      boolean pass = true;
-      for(int i=0; i<servers.size(); i++){
-        if(servers.get(i).equals(ip)){
-          pass = false;
-          break;
-        }
-      }
-      
-      if(pass){
-        servers.add(ip);
-      }
-      break;
-  }
+  //udp.send("test");
+  println(data[0], data[1], ip);
 }
